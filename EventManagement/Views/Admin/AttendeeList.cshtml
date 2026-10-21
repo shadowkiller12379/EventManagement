@@ -1,0 +1,54 @@
+﻿@model IEnumerable<EventManagement.Models.Booking>
+@{
+    ViewBag.Title = "Danh sách người tham dự";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh sách người tham dự</h2>
+
+@using (Html.BeginForm("AttendeeList", "Admin", FormMethod.Get))
+{
+    <div class="mb-3">
+        <label for="eventId">Sự kiện:</label>
+        @Html.DropDownList("eventId", (SelectList)ViewBag.Events, "-- Tất cả sự kiện --", new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Lọc</button>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Số lượng vé</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Account.FullName</td>
+                <td>@item.Account.Email</td>
+                <td>@item.Quantity</td>
+                <td>@item.BookingDate</td>
+                <td>@item.Status</td>
+                <td>
+                    @using (Html.BeginForm("UpdateStatus", "Admin", FormMethod.Post, new { style = "display:inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@item.BookingID" />
+                        <input type="hidden" name="returnUrl" value="@Request.Url.PathAndQuery" />
+                        <button type="submit" name="status" value="Approved" class="btn btn-success btn-sm">Duyệt</button>
+                        <button type="submit" name="status" value="Cancelled" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Hủy vé này?');">
+                            Hủy
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

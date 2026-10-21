@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Quản trị";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Trang quản trị</h2>
+
+<p>
+    @Html.ActionLink("Danh sách đặt vé", "BookingList", "Admin", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Lọc người tham dự theo sự kiện", "AttendeeList", "Admin", null, new { @class = "btn btn-success" })
+</p>

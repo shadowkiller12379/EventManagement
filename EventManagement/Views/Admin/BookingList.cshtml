@@ -1,0 +1,33 @@
+﻿@model IEnumerable<EventManagement.Models.Booking>
+@{
+    ViewBag.Title = "Danh sách đặt vé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Danh sách đơn đặt vé</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sự kiện</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>Số lượng vé</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Event.Title</td>
+                <td>@item.Account.FullName</td>
+                <td>@item.Account.Email</td>
+                <td>@item.Quantity</td>
+                <td>@item.BookingDate</td>
+                <td>@item.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Đăng nhập";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <h2>Đăng nhập</h2>
+        <hr />
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group mb-3">
+                <label>Tên đăng nhập:</label>
+                <input type="text" name="username" class="form-control" required />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Mật khẩu:</label>
+                <input type="password" name="password" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn btn-success">Đăng nhập</button>
+            <a href="@Url.Action("Register", "Account")" class="btn btn-link">Chưa có tài khoản? Đăng ký</a>
+        }
+    </div>
+</div>

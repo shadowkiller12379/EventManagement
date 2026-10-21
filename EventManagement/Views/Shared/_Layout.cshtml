@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <div class="container">
+        @Html.ActionLink("EVENT HUFLIT", "Index", "Home", new { area = "" }, new { @class = "navbar-brand fw-bold" })
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+            <!-- CỤM MENU BÊN TRÁI -->
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">@Html.ActionLink("Trang chủ", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+
+                @if (Session["User"] != null)
+                {
+                    var user = Session["User"] as EventManagement.Models.Account;
+                    <li class="nav-item">@Html.ActionLink("Vé của tôi", "MyTickets", "Bookings", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    <!-- CHỈ ADMIN MỚI THẤY 3 NÚT NÀY -->
+                    if (user.Role == "Admin")
+                    {
+                        <li class="nav-item">@Html.ActionLink("Quản lý Danh mục", "Index", "Categories", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Quản lý Sự kiện", "Index", "Events", new { area = "" }, new { @class = "nav-link" })</li>
+                        <!-- NÚT DẪN VÀO PHẦN CỦA KHANG LÀ DÒNG NÀY -->
+                        <li class="nav-item">@Html.ActionLink("Trang Quản trị (Duyệt vé)", "Index", "Admin", new { area = "" }, new { @class = "nav-link text-warning fw-bold" })</li>
+                    }
+                }
+            </ul>
+
+            <!-- CỤM ĐĂNG NHẬP / ĐĂNG KÝ BÊN PHẢI -->
+            <ul class="navbar-nav navbar-right">
+                @if (Session["User"] != null)
+                {
+                    var user = Session["User"] as EventManagement.Models.Account;
+                    <li class="nav-item"><a href="#" class="nav-link text-light">Xin chào, <strong>@user.FullName</strong> (@user.Role)</a></li>
+                    <li class="nav-item">@Html.ActionLink("Đăng xuất", "Logout", "Account", new { area = "" }, new { @class = "nav-link text-danger" })</li>
+                }
+                else
+                {
+                    <li class="nav-item">@Html.ActionLink("Đăng ký", "Register", "Account", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Đăng nhập", "Login", "Account", new { area = "" }, new { @class = "nav-link" })</li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
