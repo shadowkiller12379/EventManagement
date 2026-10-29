@@ -1,0 +1,104 @@
+﻿@model EventManagement.Models.Event
+
+@{
+    ViewBag.Title = "Chi tiết sự kiện - " + Model.Title;
+
+    // Tính trạng thái sự kiện theo chuẩn yêu cầu Nhóm N12 (Open / Closed / Completed)
+    string eventStatus = "Open (Đang mở đăng ký)";
+    string badgeClass = "bg-success";
+
+    if (Model.EndDate.HasValue && Model.EndDate.Value < DateTime.Now)
+    {
+        eventStatus = "Completed (Đã kết thúc)";
+        badgeClass = "bg-secondary";
+    }
+    else if ((Model.StartDate.HasValue && Model.StartDate.Value <= DateTime.Now) || (Model.TotalTickets ?? 0) <= 0)
+    {
+        eventStatus = "Closed (Đã đóng / Hết chỗ)";
+        badgeClass = "bg-danger";
+    }
+}
+
+<div class="container mt-4">
+    <!-- HIỂN THỊ THÔNG BÁO LỖI NẾU VI PHẠM NGHIỆP VỤ (Trùng vé / Quá hạn / Hết chỗ) -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger fw-bold">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card shadow-sm p-4">
+        <div class="row">
+            <div class="col-md-5 mb-3">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img src="~/Content/images/@Model.Image" class="img-fluid rounded w-100" alt="@Model.Title" style="max-height: 350px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded" style="height: 300px;">
+                        <span>Chưa có hình ảnh</span>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-7">
+                <div class="mb-2">
+                    <span class="badge bg-info text-dark me-2">
+                        @(Model.Category != null ? Model.Category.CategoryName : "Sự kiện")
+                    </span>
+                    <span class="badge @badgeClass">@eventStatus</span>
+                </div>
+
+                <h2 class="fw-bold">@Model.Title</h2>
+                <hr />
+
+                <p><strong>Mô tả sự kiện:</strong> @Model.Description</p>
+                <p><strong>Địa điểm tổ chức:</strong> @Model.Location</p>
+                <p><strong>Thời gian bắt đầu:</strong> @(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</p>
+                <p><strong>Thời gian kết thúc:</strong> @(Model.EndDate.HasValue ? Model.EndDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</p>
+                <p><strong>Số chỗ còn lại:</strong> <span class="fw-bold text-primary">@Model.TotalTickets</span> chỗ</p>
+                <h4 class="text-danger fw-bold my-3">
+                    Giá vé: @(Model.TicketPrice > 0 ? string.Format("{0:N0} VNĐ", Model.TicketPrice) : "Miễn phí")
+                </h4>
+
+                <!-- FORM ĐẶT VÉ CHUẨN -->
+                <div class="p-3 bg-light rounded border mt-3">
+                    @if (Session["User"] != null)
+                    {
+                        using (Html.BeginForm("BookTicket", "Bookings", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="eventId" value="@Model.EventID" />
+
+                            <div class="row g-2 align-items-center">
+                                <div class="col-auto">
+                                    <label class="fw-bold">Số lượng vé:</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" name="quantity" value="1" min="1" class="form-control" required />
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-success fw-bold">
+                                        Xác nhận Đặt vé
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="mb-0 text-danger">
+                            Vui lòng <a href="@Url.Action("Login", "Account")" class="fw-bold">Đăng nhập</a> để đặt vé tham dự sự kiện này.
+                        </p>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">&laquo; Quay lại Trang chủ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

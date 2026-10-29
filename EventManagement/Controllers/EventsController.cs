@@ -19,7 +19,7 @@ namespace EventManagement.Controllers
         // GET: Events
         public ActionResult Index()
         {
-            var events = db.Events.Include(e=> e.Category);
+            var events = db.Events.Include(e => e.Category);
             return View(events.ToList());
         }
 
