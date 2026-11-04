@@ -105,18 +105,49 @@ namespace EventManagement.Controllers
         }
 
         // POST: Events/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EventID,Title,Description,Image,Location,StartDate,EndDate,TicketPrice,TotalTickets,CategoryID")] Event @event)
+        public ActionResult Edit([Bind(Include = "EventID,Title,Description,Image,Location,StartDate,EndDate,TicketPrice,TotalTickets,CategoryID")] Event @event, HttpPostedFileBase ImageFile)
         {
+            // Kiểm tra quyền Admin (giữ nguyên nếu bạn đang dùng)
+            var user = Session["User"] as EventManagement.Models.Account;
+            if (user == null || user.Role != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
-                db.Entry(@event).State = EntityState.Modified;
+                // 1. Dùng AsNoTracking() để lấy dữ liệu sự kiện cũ ra mà không bị khóa
+                var existingEvent = db.Events.AsNoTracking().FirstOrDefault(e => e.EventID == @event.EventID);
+
+                // 2. Xử lý ảnh
+                if (ImageFile != null && ImageFile.ContentLength > 0)
+                {
+                    // Nếu người dùng có chọn tệp ảnh mới -> Lưu đè lên
+                    string fileName = System.IO.Path.GetFileName(ImageFile.FileName);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/Content/images/"), fileName);
+                    ImageFile.SaveAs(path);
+
+                    // Cập nhật tên file ảnh mới cho database
+                    @event.Image = fileName;
+                }
+                else
+                {
+                    // Nếu không chọn tệp mới -> Lấy lại tên ảnh cũ đắp vào, chống mất ảnh
+                    if (existingEvent != null)
+                    {
+                        @event.Image = existingEvent.Image;
+                    }
+                }
+
+                // 3. Cập nhật các thông tin khác vào CSDL
+                db.Entry(@event).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
+
                 return RedirectToAction("Index");
             }
+
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName", @event.CategoryID);
             return View(@event);
         }
@@ -147,19 +178,31 @@ namespace EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Event @event = db.Events.Find(id);
-            db.Events.Remove(@event);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            
+            var user = Session["User"] as EventManagement.Models.Account;
+            if (user == null || user.Role != "Admin")
             {
-                db.Dispose();
+                return RedirectToAction("Login", "Account");
             }
-            base.Dispose(disposing);
+
+            Event @event = db.Events.Find(id);
+            if (@event != null)
+            {
+                
+                var relatedBookings = db.Bookings.Where(b => b.EventID == id).ToList();
+                if (relatedBookings.Any())
+                {
+                    db.Bookings.RemoveRange(relatedBookings);
+                }
+
+                
+                db.Events.Remove(@event);
+
+                
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

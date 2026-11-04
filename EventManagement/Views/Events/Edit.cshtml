@@ -6,11 +6,10 @@
 
 <h2>Edit</h2>
 
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Events", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Event</h4>
         <hr />
@@ -33,10 +32,26 @@
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="form-group mb-3">
+            @Html.LabelFor(model => model.Image, "Hình ảnh sự kiện", htmlAttributes: new { @class = "control-label col-md-2 fw-bold" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control" } })
+
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <div class="mb-2">
+                        <img src="~/Content/images/@Model.Image" alt="Ảnh hiện tại" class="img-thumbnail" style="max-height: 150px; object-fit: cover;" />
+                        <br />
+                        <small class="text-muted">Ảnh hiện tại</small>
+                    </div>
+                }
+                else
+                {
+                    <div class="mb-2 text-muted fst-italic">Sự kiện chưa có ảnh</div>
+                }
+
+                <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                <small class="text-info">Để trống nếu bạn muốn giữ nguyên ảnh cũ.</small>
+
                 @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -95,7 +110,7 @@
             </div>
         </div>
     </div>
-}
+} 
 
 <div>
     @Html.ActionLink("Back to List", "Index")

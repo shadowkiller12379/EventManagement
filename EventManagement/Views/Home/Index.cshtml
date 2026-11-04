@@ -5,13 +5,12 @@
 }
 
 <div class="container mt-4">
-    <!-- Banner tiêu đề -->
     <div class="p-4 mb-4 bg-dark text-white rounded-3 text-center">
         <h1 class="fw-bold">HỆ THỐNG ĐẶT VÉ SỰ KIỆN HUFLIT</h1>
         <p class="lead mb-0">Khám phá và đăng ký tham gia các hội thảo, sự kiện hấp dẫn nhất</p>
     </div>
 
-    <!-- Thanh Tìm kiếm & Lọc LINQ -->
+    
     @using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "row g-3 mb-4 p-3 bg-light rounded border" }))
     {
         <div class="col-md-5">
@@ -25,7 +24,7 @@
         </div>
     }
 
-    <!-- Danh sách Sự kiện (Card Grid) -->
+    
     <div class="row">
         @if (!Model.Any())
         {
