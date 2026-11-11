@@ -10,6 +10,23 @@ namespace EventManagement.Controllers
     public class AccountController : Controller
     {
         private EventManagementDBEntities db = new EventManagementDBEntities();
+
+        // HÀM HỖ TRỢ: Mã hóa MD5 cho mật khẩu
+        public static string GetMD5(string str)
+        {
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] b = System.Text.Encoding.UTF8.GetBytes(str);
+                byte[] hash = md5.ComputeHash(b);
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                foreach (byte x in hash)
+                {
+                    sb.Append(x.ToString("x2"));
+                }
+                return sb.ToString();
+            }
+        }
+
         public ActionResult Register()
         {
             return View();
@@ -28,6 +45,10 @@ namespace EventManagement.Controllers
                 {
                     // Mặc định tài khoản đăng ký mới có Role là 'User'
                     account.Role = "User";
+
+                    // 1. Mã hóa mật khẩu sang MD5 trước khi lưu xuống CSDL
+                    account.Password = GetMD5(account.Password);
+
                     db.Accounts.Add(account);
                     db.SaveChanges();
 
@@ -54,8 +75,11 @@ namespace EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(string username, string password)
         {
-            // Tìm tài khoản khớp Username và Password trong Database
-            var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == password);
+            // 1. Mã hóa password người dùng vừa nhập nhập trên form ra MD5
+            string md5Pass = GetMD5(password);
+
+            // 2. Tìm tài khoản khớp Username và Password ĐÃ MÃ HÓA trong Database
+            var account = db.Accounts.FirstOrDefault(a => a.Username == username && a.Password == md5Pass);
 
             if (account != null)
             {
@@ -80,6 +104,7 @@ namespace EventManagement.Controllers
             Session["User"] = null; // Xóa Session
             return RedirectToAction("Index", "Home");
         }
+
         // GET: Account
         public ActionResult Index()
         {

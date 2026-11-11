@@ -4,36 +4,47 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div style="margin: 10px auto; width: 100%;">
+    <h2 style="text-align: center">THÔNG TIN SỰ KIỆN</h2>
+    <p>
+        @Html.ActionLink("TẠO MỚI", "Create", null, new
+        {
+            @class = "btn btn-primary"
+        })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                TÊN SỰ KIỆN
+            </th>
+            <th>
+                MÔ TẢ
+            </th>
+            
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.CategoryName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th></th>
-    </tr>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.ActionLink("SỬA", "Edit", new { id = item.CategoryID },
+                    new { @class = "btn btn-success" }) |
+                    @Html.ActionLink("CHI TIẾT", "Details", new { id = item.CategoryID },
+                                     new { @class = "btn btn-primary" }) |
+                    @Html.ActionLink("XÓA", "Delete", new { id = item.CategoryID },
+                                     new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.CategoryName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.CategoryID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.CategoryID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.CategoryID })
-        </td>
-    </tr>
-}
 
-</table>
+
+

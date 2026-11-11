@@ -4,87 +4,106 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+<div style="margin: 10px auto; width: 70%;">
+    <h2 style="text-align: center">CHI TIẾT SỰ KIỆN</h2>
+    <div>
+        <hr />
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+        <dl class="dl-horizontal">
+            <dt>
+                TÊN SỰ KIỆN
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+            <dt>
+               MÔ TẢ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
+            <dt>
+                HÌNH ẢNH
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
+            <dd>
+               
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <div class="mb-2">
+                        <img src="~/Content/images/@Model.Image" alt="Ảnh hiện tại" class="img-thumbnail" style="max-height: 150px; object-fit: cover;" />
+                        
+                    </div>
+                }
+                else
+                {
+                    <div class="mb-2 text-muted fst-italic">Sự kiện chưa có ảnh</div>
+                }
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Location)
-        </dd>
+            <dt>
+                ĐỊA CHỈ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Location)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
+            <dt>
+               THỜI GIAN BẮT ĐẦU
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
+            <dt>
+                THỜI GIAN KẾT THÚC
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TicketPrice)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TicketPrice)
-        </dd>
+            <dt>
+                GIÁ VÉ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalTickets)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TicketPrice)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotalTickets)
-        </dd>
+            <dt>
+                TỔNG SỐ VÉ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalTickets)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Category.CategoryName)
-        </dd>
+            <dt>
+                LOẠI SỰ KIỆN
+            </dt>
 
-    </dl>
+            <dd>
+                @Html.DisplayFor(model => model.Category.CategoryName)
+            </dd>
+
+        </dl>
+
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }, new
+        {
+            @class
+             = "btn btn-success"
+        }) |
+        @Html.ActionLink("TRỞ LẠI", "Index")
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -73,4 +73,12 @@
             }
         </tbody>
     </table>
+    @if (ViewBag.TotalSpent != null)
+    {
+        <div class="text-end mt-3">
+            <h4 class="fw-bold text-danger">
+                Tổng tiền đã chi: @string.Format("{0:N0}", ViewBag.TotalSpent) VNĐ
+            </h4>
+        </div>
+    }
 </div>

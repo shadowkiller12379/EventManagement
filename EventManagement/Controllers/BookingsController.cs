@@ -24,7 +24,7 @@ namespace EventManagement.Controllers
                              .Where(b => b.AccountID == user.AccountID)
                              .OrderByDescending(b => b.BookingDate)
                              .ToList();
-
+            ViewBag.TotalSpent = bookings.Where(b => b.Status != "Cancelled").Sum(b => (decimal?)b.TotalPrice) ?? 0;
             return View(bookings);
         }
 

@@ -4,93 +4,108 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<div style="margin: 10px auto; width: 70%;">
+    <h3 style="text-align: center">
+        BẠN CÓ CHẮC CHẮN MUỐN XÓA SỰ KIỆN NÀY?
+    </h3>
+    <div>
+        
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                TÊN SỰ KIỆN
+            </dt>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
+            <dt>
+                MÔ TẢ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+            <dt>
+                HÌNH ẢNH
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
+            <dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Image)
-        </dd>
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <div class="mb-2">
+                        <img src="~/Content/images/@Model.Image" alt="Ảnh hiện tại" class="img-thumbnail" style="max-height: 150px; object-fit: cover;" />
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
+                    </div>
+                }
+                else
+                {
+                    <div class="mb-2 text-muted fst-italic">Sự kiện chưa có ảnh</div>
+                }
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Location)
-        </dd>
+            <dt>
+                ĐỊA CHỈ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Location)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
+            <dt>
+                THỜI GIAN BẮT ĐẦU
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
+            <dt>
+                THỜI GIAN KẾT THÚC
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TicketPrice)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TicketPrice)
-        </dd>
+            <dt>
+                GIÁ VÉ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalTickets)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TicketPrice)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.TotalTickets)
-        </dd>
+            <dt>
+                TỔNG SỐ VÉ
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalTickets)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Category.CategoryName)
-        </dd>
+            <dt>
+                LOẠI SỰ KIỆN
+            </dt>
 
-    </dl>
+            <dd>
+                @Html.DisplayFor(model => model.Category.CategoryName)
+            </dd>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+        </dl>
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+             @Html.ActionLink("TRỞ LẠI", "Index")
+    </div>
+        }
+    </div>
 </div>

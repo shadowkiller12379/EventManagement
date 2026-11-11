@@ -4,78 +4,88 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Image)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Location)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TicketPrice)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TotalTickets)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Category.CategoryName)
-        </th>
-        <th></th>
-    </tr>
+<div style="margin: 10px auto; width: 100%;">
+    <h2 style="text-align: center">
+        THÔNG TIN SỰ KIỆN
+    </h2>
+    <p>
+        @Html.ActionLink("TẠO MỚI", "Create", null, new
+        {
+            @class = "btn btn-primary"
+        })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                TÊN SỰ KIỆN
+            </th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Image)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Location)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StartDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EndDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TicketPrice)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.TotalTickets)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Category.CategoryName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EventID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EventID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EventID })
-        </td>
-    </tr>
-}
-
-</table>
+            <th>
+                MÔ TẢ
+            </th>
+            <th>
+                HÌNH ẢNH
+            </th>
+            <th>
+                ĐỊA CHỈ
+            </th>
+            <th>
+                THỜI GIAN BẮT ĐẦU
+            </th>
+            <th>
+                THỜI GIAN KẾT THÚC
+            </th>
+            <th>
+                GIÁ VÉ
+            </th>
+            <th>
+                TỔNG SỐ VÉ
+            </th>
+            <th>
+                LOẠI SỰ KIỆN
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Image)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TicketPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalTickets)
+                </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </th>
+                
+               
+                <td>
+                    @Html.ActionLink("Sửa", "Edit", new { id = item.EventID }, new { @class = "btn btn-success" }) 
+                    @Html.ActionLink("Chi tiết", "Details", new {  id =   item.EventID   }, new { @class = "btn btn-primary" }) 
+                    @Html.ActionLink("Xóa", "Delete", new  { id =  item.EventID }, new { @class = "btn btn-danger" })
+                </td>
+            </tr>
+        }
+    </table>
+</div>
