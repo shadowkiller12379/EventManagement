@@ -1,0 +1,68 @@
+@model EventManagement.Models.Booking
+
+@{
+    ViewBag.Title = "Chi tiết đơn đặt vé #" + Model.BookingID;
+}
+
+<div class="container mt-4" style="max-width: 750px;">
+    <h2 class="fw-bold mb-3">Chi tiết đơn đặt vé #@Model.BookingID</h2>
+
+    <div class="card shadow-sm p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-4">Mã đơn (BookingID)</dt>
+            <dd class="col-sm-8 fw-bold">#@Model.BookingID</dd>
+
+            <dt class="col-sm-4">Người đặt</dt>
+            <dd class="col-sm-8">@(Model.Account != null ? Model.Account.FullName : "")</dd>
+
+            <dt class="col-sm-4">Sự kiện</dt>
+            <dd class="col-sm-8 fw-bold">@(Model.Event != null ? Model.Event.Title : "")</dd>
+
+            <dt class="col-sm-4">Địa điểm</dt>
+            <dd class="col-sm-8">@(Model.Event != null ? Model.Event.Location : "")</dd>
+
+            <dt class="col-sm-4">Ngày đặt</dt>
+            <dd class="col-sm-8">@(Model.BookingDate.HasValue ? Model.BookingDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</dd>
+
+            <dt class="col-sm-4">Số lượng vé</dt>
+            <dd class="col-sm-8">@Model.Quantity</dd>
+
+            <dt class="col-sm-4">Tổng tiền</dt>
+            <dd class="col-sm-8 text-danger fw-bold">
+                @(Model.TotalPrice.HasValue ? string.Format("{0:N0} VNĐ", Model.TotalPrice) : "0 VNĐ")
+            </dd>
+
+            <dt class="col-sm-4">Trạng thái</dt>
+            <dd class="col-sm-8">
+                @if (Model.Status == "Approved")
+                {
+                    <span class="badge bg-success">Đã duyệt (Approved)</span>
+                }
+                else if (Model.Status == "Cancelled")
+                {
+                    <span class="badge bg-danger">Đã hủy (Cancelled)</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark">Chờ duyệt (@Model.Status)</span>
+                }
+            </dd>
+        </dl>
+
+        <div class="mt-4 d-flex gap-2">
+            <a href="@Url.Action("MyTickets", "Bookings")" class="btn btn-secondary">&laquo; Quay lại Vé của tôi</a>
+
+            @if (Model.Status != "Cancelled")
+            {
+                using (Html.BeginForm("CancelTicket", "Bookings", FormMethod.Post, new { style = "display:inline;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.BookingID" />
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn hủy vé này?');">
+                        Hủy vé
+                    </button>
+                }
+            }
+        </div>
+    </div>
+</div>

@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Edit";
+    int soldTickets = ViewBag.SoldTickets != null ? (int)ViewBag.SoldTickets : 0;
+    int totalCapacity = ViewBag.TotalCapacity != null ? (int)ViewBag.TotalCapacity : (soldTickets + (Model.TotalTickets ?? 0));
 }
 <div style="margin: 10px auto; width: 70%;">
     <h2 style="text-align: center">CHỈNH SỬA SỰ KIỆN</h2>
@@ -11,11 +13,11 @@
         <div class="form-horizontal">
             <hr />
 
-            @* Đổi true thành false để hiện mọi lỗi nếu có *@
             @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
             @Html.HiddenFor(model => model.EventID)
             @Html.HiddenFor(model => model.Image)
+            @Html.HiddenFor(model => model.TotalTickets)
 
             <div class="form-group">
                 TÊN SỰ KIỆN
@@ -57,7 +59,6 @@
                 </div>
             </div>
 
-            @* Bổ sung ô ĐỊA CHỈ bị thiếu *@
             <div class="form-group">
                 ĐỊA CHỈ
                 <div class="col-md-10">
@@ -95,9 +96,10 @@
             <br />
 
             <div class="form-group">
-                TỔNG SỐ VÉ
+                TỔNG SỨC CHỨA (Số vé đã đặt hợp lệ hiện tại: <strong class="text-primary">@soldTickets</strong> | Số vé còn lại: <strong class="text-success">@(Model.TotalTickets ?? 0)</strong>)
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.TotalTickets, new { htmlAttributes = new { @class = "form-control" } })
+                    <input type="number" name="totalCapacity" value="@totalCapacity" class="form-control" required />
+                    <small class="text-muted">Không được âm và không nhỏ hơn @soldTickets vé đã đặt hợp lệ.</small>
                     @Html.ValidationMessageFor(model => model.TotalTickets, "", new { @class = "text-danger" })
                 </div>
             </div>

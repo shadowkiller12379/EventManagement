@@ -1,43 +1,43 @@
-﻿@model EventManagement.Models.Category
+@model EventManagement.Models.Category
 
 @{
     ViewBag.Title = "Delete";
+    int eventCount = ViewBag.EventCount != null ? (int)ViewBag.EventCount : 0;
 }
-
 
 <div style="margin: 10px auto; width: 70%;">
     <h3 style="text-align: center">
-        BẠN CÓ CHẮC CHẮN MUỐN XÓA SỰ KIỆN NÀY?
+        BẠN CÓ CHẮC CHẮN MUỐN XÓA DANH MỤC NÀY?
     </h3>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger fw-bold mt-3">@TempData["Error"]</div>
+    }
+
+    @if (eventCount > 0)
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>Cảnh báo:</strong> Danh mục này đang chứa <strong>@eventCount</strong> sự kiện nên không thể xóa.
+        </div>
+    }
 
     <div>
         <hr />
-
         <dl class="dl-horizontal">
-            <dt>
-                TÊN SỰ KIỆN
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.CategoryName)
-            </dd>
+            <dt>TÊN DANH MỤC</dt>
+            <dd>@Html.DisplayFor(model => model.CategoryName)</dd>
 
-            <dt>
-                MÔ TẢ
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
+            <dt>MÔ TẢ</dt>
+            <dd>@Html.DisplayFor(model => model.Description)</dd>
         </dl>
 
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            
 
             <div class="form-actions no-color">
-                <input type="submit" value="XÓA"
-                       class="btn btn-danger" /> |
-
+                <input type="submit" value="XÓA" class="btn btn-danger" /> |
                 @Html.ActionLink("TRỞ LẠI", "Index")
             </div>
         }

@@ -1,11 +1,15 @@
-﻿@model IEnumerable<EventManagement.Models.Category>
+@model IEnumerable<EventManagement.Models.Category>
 
 @{
     ViewBag.Title = "Index";
 }
 
 <div style="margin: 10px auto; width: 100%;">
-    <h2 style="text-align: center">THÔNG TIN SỰ KIỆN</h2>
+    <h2 style="text-align: center">THÔNG TIN DANH MỤC</h2>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success fw-bold">@TempData["Success"]</div>
+    }
     <p>
         @Html.ActionLink("TẠO MỚI", "Create", null, new
         {

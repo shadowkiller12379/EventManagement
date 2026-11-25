@@ -11,7 +11,8 @@ namespace EventManagement.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Event
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,18 +20,50 @@ namespace EventManagement.Models
         {
             this.Bookings = new HashSet<Booking>();
         }
-    
+
         public int EventID { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập tên sự kiện.")]
+        [StringLength(200, ErrorMessage = "Tên sự kiện không được vượt quá 200 ký tự.")]
+        [Display(Name = "Tên sự kiện")]
         public string Title { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập mô tả sự kiện.")]
+        [Display(Name = "Mô tả")]
         public string Description { get; set; }
+
+        [Display(Name = "Hình ảnh")]
         public string Image { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập địa điểm tổ chức.")]
+        [StringLength(200, ErrorMessage = "Địa điểm không được vượt quá 200 ký tự.")]
+        [Display(Name = "Địa điểm")]
         public string Location { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng chọn ngày bắt đầu.")]
+        [Display(Name = "Ngày bắt đầu")]
+        [DataType(DataType.DateTime)]
         public Nullable<System.DateTime> StartDate { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng chọn ngày kết thúc.")]
+        [Display(Name = "Ngày kết thúc")]
+        [DataType(DataType.DateTime)]
         public Nullable<System.DateTime> EndDate { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập giá vé (nhập 0 nếu miễn phí).")]
+        [Range(0, 100000000, ErrorMessage = "Giá vé phải từ 0 VNĐ trở lên.")]
+        [Display(Name = "Giá vé")]
         public Nullable<decimal> TicketPrice { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập số lượng vé.")]
+        [Range(0, 100000, ErrorMessage = "Số lượng vé phải từ 0 trở lên.")]
+        [Display(Name = "Số vé còn lại")]
         public Nullable<int> TotalTickets { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng chọn danh mục sự kiện.")]
+        [Display(Name = "Danh mục")]
         public int CategoryID { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual Category Category { get; set; }

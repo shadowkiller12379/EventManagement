@@ -1,10 +1,10 @@
-﻿@model EventManagement.Models.Category
+@model EventManagement.Models.Category
 
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2 style="text-align: center">CHỈNH SỬA SỰ KIỆN</h2>
+<h2 style="text-align: center">CHỈNH SỬA DANH MỤC</h2>
 
 
 @using (Html.BeginForm())
@@ -18,7 +18,7 @@
         @Html.HiddenFor(model => model.CategoryID)
 
         <div class="form-group">
-            TÊN SỰ KIỆN
+            TÊN DANH MỤC
             <div class="col-md-10">
                 @Html.EditorFor(model => model.CategoryName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.CategoryName, "", new { @class = "text-danger" })
