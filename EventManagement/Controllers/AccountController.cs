@@ -9,7 +9,7 @@ namespace EventManagement.Controllers
 {
     public class AccountController : Controller
     {
-        private EventManagementDBEntities db = new EventManagementDBEntities();
+        private EventManagementDBEntities1 db = new EventManagementDBEntities1();
 
         // HÀM HỖ TRỢ: Mã hóa MD5 cho mật khẩu
         public static string GetMD5(string str)

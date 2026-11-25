@@ -198,7 +198,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="EventManagementDBEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="EventManagementDBEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Accounts" EntityType="Self.Account" />
           <EntitySet Name="Bookings" EntityType="Self.Booking" />
           <EntitySet Name="Categories" EntityType="Self.Category" />
@@ -221,7 +221,7 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="EventManagementDBModelStoreContainer" CdmEntityContainer="EventManagementDBEntities">
+        <EntityContainerMapping StorageEntityContainer="EventManagementDBModelStoreContainer" CdmEntityContainer="EventManagementDBEntities1">
           <EntitySetMapping Name="Accounts">
             <EntityTypeMapping TypeName="EventManagementDBModel.Account">
               <MappingFragment StoreEntitySet="Accounts">

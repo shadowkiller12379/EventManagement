@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="570d9e1d5baa4dd7a97ddf6a13834b7b" Name="Diagram1" ZoomLevel="93">
+      <Diagram DiagramId="3246833daa324b479bed09985f295e22" Name="Diagram1">
         <EntityTypeShape EntityType="EventManagementDBModel.Account" Width="1.5" PointX="3" PointY="5.5" IsExpanded="true" />
         <EntityTypeShape EntityType="EventManagementDBModel.Booking" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="EventManagementDBModel.Category" Width="1.5" PointX="0.75" PointY="1.75" IsExpanded="true" />

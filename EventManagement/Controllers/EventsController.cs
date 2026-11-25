@@ -14,7 +14,7 @@ namespace EventManagement.Controllers
 {
     public class EventsController : Controller
     {
-        private EventManagementDBEntities db = new EventManagementDBEntities();
+        private EventManagementDBEntities1 db = new EventManagementDBEntities1();
 
         // GET: Events
         public ActionResult Index()
@@ -62,15 +62,19 @@ namespace EventManagement.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-
+            ValidateEvent(@event);
+            if (ImageFile != null && ImageFile.ContentLength > 0)
+            {
+                var imgError = ValidateImage(ImageFile);
+                if (imgError != null)
+                    ModelState.AddModelError("Image", imgError);
+            }
             if (ModelState.IsValid)
             {
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
-                    var fileName = Path.GetFileName(ImageFile.FileName);
-                    var path = Path.Combine(Server.MapPath("~/Content/images"), fileName);
-                    ImageFile.SaveAs(path);
-                    @event.Image = fileName;
+                    
+                    @event.Image = SaveImage(ImageFile);
                 }
 
                 db.Events.Add(@event);
@@ -115,7 +119,14 @@ namespace EventManagement.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+            ValidateEvent(@event);
 
+            if (ImageFile != null && ImageFile.ContentLength > 0)
+            {
+                var imgError = ValidateImage(ImageFile);
+                if (imgError != null)
+                    ModelState.AddModelError("Image", imgError);
+            }
             if (ModelState.IsValid)
             {
                 // 1. Dùng AsNoTracking() để lấy dữ liệu sự kiện cũ ra mà không bị khóa
@@ -124,13 +135,8 @@ namespace EventManagement.Controllers
                 // 2. Xử lý ảnh
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
-                    // Nếu người dùng có chọn tệp ảnh mới -> Lưu đè lên
-                    string fileName = System.IO.Path.GetFileName(ImageFile.FileName);
-                    string path = System.IO.Path.Combine(Server.MapPath("~/Content/images/"), fileName);
-                    ImageFile.SaveAs(path);
-
-                    // Cập nhật tên file ảnh mới cho database
-                    @event.Image = fileName;
+                    // Có chọn ảnh mới -> lưu với tên ngẫu nhiên
+                    @event.Image = SaveImage(ImageFile);
                 }
                 else
                 {
@@ -203,6 +209,55 @@ namespace EventManagement.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        private void ValidateEvent(Event e)
+        {
+            if (e.TicketPrice.HasValue && e.TicketPrice.Value < 0)
+                ModelState.AddModelError("TicketPrice", "Giá vé không được âm.");
+
+            if (e.TotalTickets.HasValue && e.TotalTickets.Value < 0)
+                ModelState.AddModelError("TotalTickets", "Tổng số vé không được âm.");
+
+            if (e.StartDate.HasValue && e.EndDate.HasValue && e.EndDate.Value < e.StartDate.Value)
+                ModelState.AddModelError("EndDate", "Thời gian kết thúc phải sau thời gian bắt đầu.");
+        }
+        private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        private const int MaxImageSize = 2 * 1024 * 1024; // 2 MB
+
+        // Trả về thông báo lỗi, hoặc null nếu ảnh hợp lệ
+        private string ValidateImage(HttpPostedFileBase file)
+        {
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!AllowedExtensions.Contains(ext))
+                return "Chỉ chấp nhận ảnh .jpg, .jpeg, .png, .gif.";
+
+            if (file.ContentLength > MaxImageSize)
+                return "Ảnh không được vượt quá 2 MB.";
+
+            // Kiểm tra nội dung thật sự là ảnh (chặn đổi đuôi .txt thành .jpg)
+            try
+            {
+                using (var img = System.Drawing.Image.FromStream(file.InputStream)) { }
+            }
+            catch
+            {
+                return "Tệp không phải là ảnh hợp lệ.";
+            }
+            finally
+            {
+                file.InputStream.Position = 0; // trả con trỏ về đầu để còn lưu tệp
+            }
+            return null;
+        }
+
+        // Lưu ảnh với tên ngẫu nhiên, trả về tên tệp để ghi vào CSDL
+        private string SaveImage(HttpPostedFileBase file)
+        {
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var fileName = Guid.NewGuid().ToString("N") + ext;
+            var path = Path.Combine(Server.MapPath("~/Content/images"), fileName);
+            file.SaveAs(path);
+            return fileName;
         }
     }
 }

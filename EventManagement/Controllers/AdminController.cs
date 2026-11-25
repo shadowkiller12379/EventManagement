@@ -10,7 +10,7 @@ namespace EventManagement.Controllers
 {
     public class AdminController : Controller
     {
-        private EventManagementDBEntities db = new EventManagementDBEntities();
+        private EventManagementDBEntities1 db = new EventManagementDBEntities1();
 
         // Chạy trước mọi action trong controller này: kiểm tra đăng nhập + quyền Admin
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -64,8 +64,24 @@ namespace EventManagement.Controllers
             if (booking == null)
                 return HttpNotFound();
 
-            booking.Status = status;
-            db.SaveChanges();
+            // Đơn đã hủy thì không đổi nữa (số chỗ đã được hoàn lại trước đó)
+            if (booking.Status == "Cancelled")
+            {
+                TempData["Error"] = "Đơn này đã bị hủy, không thể thay đổi trạng thái.";
+            }
+            else
+            {
+                // Hủy đơn Pending/Approved -> hoàn lại đúng số chỗ của đơn
+                if (status == "Cancelled")
+                {
+                    var ev = db.Events.Find(booking.EventID);
+                    if (ev != null)
+                        ev.TotalTickets = (ev.TotalTickets ?? 0) + booking.Quantity;
+                }
+
+                booking.Status = status;
+                db.SaveChanges();   // một lần: đổi trạng thái và hoàn chỗ cùng thành công hoặc cùng thất bại
+            }
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);

@@ -12,7 +12,7 @@ namespace EventManagement.Controllers
 {
     public class CategoriesController : Controller
     {
-        private EventManagementDBEntities db = new EventManagementDBEntities();
+        private EventManagementDBEntities1 db = new EventManagementDBEntities1();
 
         // GET: Categories
         public ActionResult Index()
@@ -38,16 +38,26 @@ namespace EventManagement.Controllers
         // GET: Categories/Create
         public ActionResult Create()
         {
+            var user = Session["User"] as Account;
+            if (user == null || user.Role != "Admin")
+            {
+                // Nếu chưa đăng nhập hoặc không phải Admin -> Đẩy về trang Login
+                return RedirectToAction("Login", "Account");
+            }
             return View();
         }
 
         // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
         {
+            var user = Session["User"] as Account;
+            if (user == null || user.Role != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
@@ -61,6 +71,11 @@ namespace EventManagement.Controllers
         // GET: Categories/Edit/5
         public ActionResult Edit(int? id)
         {
+            var user = Session["User"] as Account;
+            if (user == null || user.Role != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -74,12 +89,16 @@ namespace EventManagement.Controllers
         }
 
         // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
         {
+            var user = Session["User"] as Account;
+            if (user == null || user.Role != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(category).State = EntityState.Modified;
@@ -92,6 +111,11 @@ namespace EventManagement.Controllers
         // GET: Categories/Delete/5
         public ActionResult Delete(int? id)
         {
+            var user = Session["User"] as Account;
+            if (user == null || user.Role != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,9 +133,18 @@ namespace EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            var user = Session["User"] as Account;
+            if (user == null || user.Role != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
-            db.SaveChanges();
+            if (category != null)
+            {
+                db.Categories.Remove(category);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

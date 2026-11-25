@@ -8,7 +8,7 @@ namespace EventManagement.Controllers
 {
     public class BookingsController : Controller
     {
-        private EventManagementDBEntities db = new EventManagementDBEntities();
+        private EventManagementDBEntities1 db = new EventManagementDBEntities1();
 
         // 1. Xem danh sách vé đã đặt (Mục 8-4: 0.20đ)
         public ActionResult MyTickets()

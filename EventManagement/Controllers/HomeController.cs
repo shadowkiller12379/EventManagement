@@ -12,7 +12,7 @@ namespace EventManagement.Controllers
     public class HomeController : Controller
     {
         
-        private EventManagementDBEntities db = new EventManagementDBEntities();
+        private EventManagementDBEntities1 db = new EventManagementDBEntities1();
 
         
         public ActionResult Index(string searchString, int? categoryId)
