@@ -1,10 +1,20 @@
-﻿@model IEnumerable<EventManagement.Models.Booking>
+@model IEnumerable<EventManagement.Models.Booking>
 @{
     ViewBag.Title = "Danh sách người tham dự";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Danh sách người tham dự</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success fw-bold">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger fw-bold">@TempData["Error"]</div>
+}
 
 @using (Html.BeginForm("AttendeeList", "Admin", FormMethod.Get))
 {
@@ -18,6 +28,7 @@
 <table class="table table-bordered table-striped align-middle">
     <thead class="table-dark">
         <tr>
+            <th>Mã đơn</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Tên sự kiện</th>
@@ -31,7 +42,7 @@
         @if (!Model.Any())
         {
             <tr>
-                <td colspan="7" class="text-center text-muted py-3">Chưa có lượt đặt vé nào.</td>
+                <td colspan="8" class="text-center text-muted py-3">Chưa có lượt đặt vé nào.</td>
             </tr>
         }
         else
@@ -39,6 +50,7 @@
             foreach (var item in Model)
             {
                 <tr>
+                    <td><strong>#@item.BookingID</strong></td>
                     <td><strong>@(item.Account != null ? item.Account.FullName : "")</strong></td>
                     <td>@(item.Account != null ? item.Account.Email : "")</td>
                     <td>@(item.Event != null ? item.Event.Title : "")</td>
@@ -59,16 +71,26 @@
                         }
                     </td>
                     <td class="text-nowrap">
-                        @using (Html.BeginForm("UpdateStatus", "Admin", FormMethod.Post, new { style = "display:inline" }))
+                        @if (item.Status != "Cancelled")
                         {
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@item.BookingID" />
-                            <input type="hidden" name="returnUrl" value="@Request.Url.PathAndQuery" />
-                            <button type="submit" name="status" value="Approved" class="btn btn-success btn-sm">Duyệt</button>
-                            <button type="submit" name="status" value="Cancelled" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Hủy vé này?');">
-                                Hủy
-                            </button>
+                            using (Html.BeginForm("UpdateStatus", "Admin", FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.BookingID" />
+                                <input type="hidden" name="returnUrl" value="@Request.Url.PathAndQuery" />
+                                if (item.Status == "Pending")
+                                {
+                                    <button type="submit" name="status" value="Approved" class="btn btn-success btn-sm">Duyệt</button>
+                                }
+                                <button type="submit" name="status" value="Cancelled" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Hủy vé này và hoàn chỗ?');">
+                                    Hủy
+                                </button>
+                            }
+                        }
+                        else
+                        {
+                            <span class="text-muted small fst-italic">Đã đóng</span>
                         }
                     </td>
                 </tr>

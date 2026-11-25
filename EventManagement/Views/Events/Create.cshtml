@@ -1,4 +1,4 @@
-﻿@model EventManagement.Models.Event
+@model EventManagement.Models.Event
 
 @{
     ViewBag.Title = "Create";
@@ -81,7 +81,7 @@
             </div>
 
             <div class="form-group">
-                MÃ SỰ KIỆN
+                DANH MỤC SỰ KIỆN
                 <div class="col-md-10">
                     @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })

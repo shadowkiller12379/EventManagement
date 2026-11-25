@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.Title = "Đăng nhập";
 }
 
@@ -6,6 +6,11 @@
     <div class="col-md-6">
         <h2>Đăng nhập</h2>
         <hr />
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-warning fw-bold">@TempData["Error"]</div>
+        }
 
         @if (ViewBag.Error != null)
         {

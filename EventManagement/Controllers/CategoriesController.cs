@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
+using EventManagement.Filters;
 using EventManagement.Models;
 
 namespace EventManagement.Controllers
 {
+    [AdminAuthorize]
     public class CategoriesController : Controller
     {
         private EventManagementDBEntities1 db = new EventManagementDBEntities1();
@@ -24,26 +22,18 @@ namespace EventManagement.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Category category = db.Categories.Find(id);
             if (category == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(category);
         }
 
         // GET: Categories/Create
         public ActionResult Create()
         {
-            var user = Session["User"] as Account;
-            if (user == null || user.Role != "Admin")
-            {
-                // Nếu chưa đăng nhập hoặc không phải Admin -> Đẩy về trang Login
-                return RedirectToAction("Login", "Account");
-            }
             return View();
         }
 
@@ -52,16 +42,11 @@ namespace EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
         {
-            var user = Session["User"] as Account;
-            if (user == null || user.Role != "Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
                 db.SaveChanges();
+                TempData["Success"] = "Thêm danh mục thành công!";
                 return RedirectToAction("Index");
             }
 
@@ -71,20 +56,13 @@ namespace EventManagement.Controllers
         // GET: Categories/Edit/5
         public ActionResult Edit(int? id)
         {
-            var user = Session["User"] as Account;
-            if (user == null || user.Role != "Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Category category = db.Categories.Find(id);
             if (category == null)
-            {
                 return HttpNotFound();
-            }
+
             return View(category);
         }
 
@@ -93,16 +71,11 @@ namespace EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CategoryID,CategoryName,Description")] Category category)
         {
-            var user = Session["User"] as Account;
-            if (user == null || user.Role != "Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             if (ModelState.IsValid)
             {
                 db.Entry(category).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["Success"] = "Cập nhật danh mục thành công!";
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -111,20 +84,14 @@ namespace EventManagement.Controllers
         // GET: Categories/Delete/5
         public ActionResult Delete(int? id)
         {
-            var user = Session["User"] as Account;
-            if (user == null || user.Role != "Admin")
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             Category category = db.Categories.Find(id);
             if (category == null)
-            {
                 return HttpNotFound();
-            }
+
+            ViewBag.EventCount = db.Events.Count(e => e.CategoryID == category.CategoryID);
             return View(category);
         }
 
@@ -133,27 +100,27 @@ namespace EventManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var user = Session["User"] as Account;
-            if (user == null || user.Role != "Admin")
+            Category category = db.Categories.Find(id);
+            if (category == null)
+                return HttpNotFound();
+
+            int eventCount = db.Events.Count(e => e.CategoryID == id);
+            if (eventCount > 0)
             {
-                return RedirectToAction("Login", "Account");
+                TempData["Error"] = $"Không thể xóa danh mục '{category.CategoryName}' vì đang có {eventCount} sự kiện thuộc danh mục này.";
+                return RedirectToAction("Delete", new { id = id });
             }
 
-            Category category = db.Categories.Find(id);
-            if (category != null)
-            {
-                db.Categories.Remove(category);
-                db.SaveChanges();
-            }
+            db.Categories.Remove(category);
+            db.SaveChanges();
+            TempData["Success"] = "Đã xóa danh mục thành công!";
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

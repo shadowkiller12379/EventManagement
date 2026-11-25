@@ -1,12 +1,38 @@
-﻿
 @{
     ViewBag.Title = "Quản trị";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Trang quản trị</h2>
+<h2 class="fw-bold mb-3">Trang quản trị</h2>
 
-<p>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-primary border-4 p-3">
+            <small class="text-muted">Tổng sự kiện / Danh mục</small>
+            <h4 class="fw-bold mb-0">@ViewBag.TotalEvents sự kiện / @ViewBag.TotalCategories danh mục</h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-warning border-4 p-3">
+            <small class="text-muted">Đơn chờ duyệt (Pending)</small>
+            <h4 class="fw-bold text-warning mb-0">@ViewBag.PendingBookings / @ViewBag.TotalBookings đơn</h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-success border-4 p-3">
+            <small class="text-muted">Đã duyệt / Đã hủy</small>
+            <h4 class="fw-bold mb-0"><span class="text-success">@ViewBag.ApprovedBookings</span> / <span class="text-danger">@ViewBag.CancelledBookings</span></h4>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-start border-danger border-4 p-3">
+            <small class="text-muted">Tổng doanh thu (không tính đơn hủy)</small>
+            <h4 class="fw-bold text-danger mb-0">@string.Format("{0:N0} VNĐ", ViewBag.TotalRevenue ?? 0)</h4>
+        </div>
+    </div>
+</div>
+
+<p class="d-flex gap-2">
     @Html.ActionLink("Danh sách đặt vé", "BookingList", "Admin", null, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Lọc người tham dự theo sự kiện", "AttendeeList", "Admin", null, new { @class = "btn btn-success" })
+    @Html.ActionLink("Lọc người tham dự & Duyệt/Hủy vé", "AttendeeList", "Admin", null, new { @class = "btn btn-success" })
 </p>

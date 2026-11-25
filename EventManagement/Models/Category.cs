@@ -11,7 +11,8 @@ namespace EventManagement.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Category
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -19,11 +20,18 @@ namespace EventManagement.Models
         {
             this.Events = new HashSet<Event>();
         }
-    
+
         public int CategoryID { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập tên danh mục sự kiện.")]
+        [StringLength(100, ErrorMessage = "Tên danh mục không được vượt quá 100 ký tự.")]
+        [Display(Name = "Tên danh mục")]
         public string CategoryName { get; set; }
+
+        [StringLength(255, ErrorMessage = "Mô tả không được vượt quá 255 ký tự.")]
+        [Display(Name = "Mô tả")]
         public string Description { get; set; }
-    
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Event> Events { get; set; }
     }

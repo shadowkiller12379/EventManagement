@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EventManagement.Models.Booking>
+@model IEnumerable<EventManagement.Models.Booking>
 @{
     ViewBag.Title = "Danh sách đặt vé";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,10 +9,12 @@
 <table class="table table-bordered table-striped align-middle">
     <thead class="table-dark">
         <tr>
+            <th>Mã đơn</th>
             <th>Sự kiện</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Số lượng vé</th>
+            <th>Tổng tiền</th>
             <th>Ngày đặt</th>
             <th>Trạng thái</th>
         </tr>
@@ -21,7 +23,7 @@
         @if (!Model.Any())
         {
             <tr>
-                <td colspan="6" class="text-center text-muted py-3">Chưa có lượt đặt vé nào.</td>
+                <td colspan="8" class="text-center text-muted py-3">Chưa có lượt đặt vé nào.</td>
             </tr>
         }
         else
@@ -29,10 +31,12 @@
             foreach (var item in Model)
             {
                 <tr>
+                    <td><strong>#@item.BookingID</strong></td>
                     <td><strong>@(item.Event != null ? item.Event.Title : "")</strong></td>
                     <td>@(item.Account != null ? item.Account.FullName : "")</td>
                     <td>@(item.Account != null ? item.Account.Email : "")</td>
                     <td>@item.Quantity</td>
+                    <td>@(item.TotalPrice.HasValue ? string.Format("{0:N0} VNĐ", item.TotalPrice) : "0 VNĐ")</td>
                     <td>@(item.BookingDate.HasValue ? item.BookingDate.Value.ToString("dd/MM/yyyy HH:mm") : "")</td>
                     <td>
                         @if (item.Status == "Approved")

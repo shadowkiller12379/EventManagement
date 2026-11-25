@@ -1,7 +1,14 @@
-﻿@model IEnumerable<EventManagement.Models.Event>
+@model IEnumerable<EventManagement.Models.Event>
 
 @{
     ViewBag.Title = "Trang chủ - Danh sách Sự kiện";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger fw-bold mt-3">
+        @TempData["Error"]
+    </div>
 }
 
 <div class="p-5 mb-5 rounded-3 text-center position-relative"
@@ -12,23 +19,31 @@
         <a href="#event-list" class="btn btn-warning btn-lg fw-bold px-4 rounded-pill">Khám phá ngay</a>
     </div>
 </div>
-<!-- Thêm id này vào div row chứa ô tìm kiếm để nút "Khám phá ngay" cuộn xuống tới đây -->
+
 <div id="event-list"></div>
 
-
-@using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "row g-3 mb-4 p-3 bg-light rounded border" }))
+@using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "row g-2 mb-4 p-3 bg-light rounded border align-items-end" }))
 {
-    <div class="col-md-5">
-        <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control" placeholder="Nhập tên sự kiện hoặc địa điểm..." />
-    </div>
     <div class="col-md-4">
+        <label class="form-label fw-bold small mb-1">Từ khóa (tên / địa điểm)</label>
+        <input type="text" name="searchString" value="@ViewBag.CurrentFilter" class="form-control" placeholder="VD: nhạc hội Quận 7..." />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label fw-bold small mb-1">Danh mục</label>
         @Html.DropDownList("categoryId", (SelectList)ViewBag.CategoryID, "-- Tất cả danh mục --", new { @class = "form-select form-control" })
     </div>
-    <div class="col-md-3 d-grid">
-        <button type="submit" class="btn btn-primary">Tìm kiếm / Lọc</button>
+    <div class="col-md-2">
+        <label class="form-label fw-bold small mb-1">Từ ngày</label>
+        <input type="date" name="fromDate" value="@ViewBag.FromDate" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label fw-bold small mb-1">Đến ngày</label>
+        <input type="date" name="toDate" value="@ViewBag.ToDate" class="form-control" />
+    </div>
+    <div class="col-md-1 d-grid">
+        <button type="submit" class="btn btn-primary">Lọc</button>
     </div>
 }
-
 
 <div class="row">
     @if (!Model.Any())
@@ -41,36 +56,31 @@
     {
         foreach (var item in Model)
         {
-            
             var now = DateTime.Now;
             string statusText = "Sắp diễn ra";
-            string statusBadgeClass = "bg-primary"; // Màu xanh dương
+            string statusBadgeClass = "bg-primary";
 
             if (item.EndDate.HasValue && now > item.EndDate.Value)
             {
                 statusText = "Đã kết thúc";
-                statusBadgeClass = "bg-danger"; // Màu đỏ
+                statusBadgeClass = "bg-danger";
             }
             else if (item.StartDate.HasValue && now >= item.StartDate.Value)
             {
-                
                 if ((item.EndDate.HasValue && now <= item.EndDate.Value) || (!item.EndDate.HasValue && now.Date == item.StartDate.Value.Date))
                 {
                     statusText = "Đang diễn ra";
-                    statusBadgeClass = "bg-success"; // Màu xanh lá
+                    statusBadgeClass = "bg-success";
                 }
                 else
                 {
                     statusText = "Đã kết thúc";
-                    statusBadgeClass = "bg-secondary"; // Màu xám
+                    statusBadgeClass = "bg-secondary";
                 }
             }
 
             <div class="col-md-4 mb-4">
-                
                 <div class="card h-100 shadow-sm position-relative">
-
-                    
                     <span class="badge @statusBadgeClass position-absolute top-0 end-0 m-2 px-3 py-2 shadow"
                           style="z-index: 10; font-size: 0.85rem; border-radius: 20px;">
                         @statusText

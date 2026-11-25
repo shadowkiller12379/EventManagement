@@ -1,111 +1,78 @@
-﻿@model EventManagement.Models.Event
+@model EventManagement.Models.Event
 
 @{
     ViewBag.Title = "Delete";
+    int bookingCount = ViewBag.BookingCount != null ? (int)ViewBag.BookingCount : 0;
 }
 
 <div style="margin: 10px auto; width: 70%;">
     <h3 style="text-align: center">
         BẠN CÓ CHẮC CHẮN MUỐN XÓA SỰ KIỆN NÀY?
     </h3>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger fw-bold mt-3">@TempData["Error"]</div>
+    }
+
+    @if (bookingCount > 0)
+    {
+        <div class="alert alert-warning mt-3">
+            <strong>Cảnh báo nghiệp vụ:</strong> Sự kiện này đang có <strong>@bookingCount</strong> đơn đặt vé trong hệ thống.
+            Để bảo toàn lịch sử đối soát và tránh mất dữ liệu của người dùng, hệ thống không cho phép xóa trực tiếp.
+        </div>
+    }
+
     <div>
-        
         <hr />
         <dl class="dl-horizontal">
-            <dt>
-                TÊN SỰ KIỆN
-            </dt>
+            <dt>TÊN SỰ KIỆN</dt>
+            <dd>@Html.DisplayFor(model => model.Title)</dd>
 
+            <dt>MÔ TẢ</dt>
+            <dd>@Html.DisplayFor(model => model.Description)</dd>
+
+            <dt>HÌNH ẢNH</dt>
             <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-
-            <dt>
-                MÔ TẢ
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-
-            <dt>
-                HÌNH ẢNH
-            </dt>
-
-            <dd>
-
                 @if (!string.IsNullOrEmpty(Model.Image))
                 {
                     <div class="mb-2">
                         <img src="~/Content/images/@Model.Image" alt="Ảnh hiện tại" class="img-thumbnail" style="max-height: 150px; object-fit: cover;" />
-
                     </div>
                 }
                 else
                 {
                     <div class="mb-2 text-muted fst-italic">Sự kiện chưa có ảnh</div>
                 }
-                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
             </dd>
 
-            <dt>
-                ĐỊA CHỈ
-            </dt>
+            <dt>ĐỊA CHỈ</dt>
+            <dd>@Html.DisplayFor(model => model.Location)</dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.Location)
-            </dd>
+            <dt>THỜI GIAN BẮT ĐẦU</dt>
+            <dd>@Html.DisplayFor(model => model.StartDate)</dd>
 
-            <dt>
-                THỜI GIAN BẮT ĐẦU
-            </dt>
+            <dt>THỜI GIAN KẾT THÚC</dt>
+            <dd>@Html.DisplayFor(model => model.EndDate)</dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.StartDate)
-            </dd>
+            <dt>GIÁ VÉ</dt>
+            <dd>@Html.DisplayFor(model => model.TicketPrice)</dd>
 
-            <dt>
-                THỜI GIAN KẾT THÚC
-            </dt>
+            <dt>SỐ VÉ CÒN LẠI</dt>
+            <dd>@Html.DisplayFor(model => model.TotalTickets)</dd>
 
-            <dd>
-                @Html.DisplayFor(model => model.EndDate)
-            </dd>
-
-            <dt>
-                GIÁ VÉ
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TicketPrice)
-            </dd>
-
-            <dt>
-                TỔNG SỐ VÉ
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.TotalTickets)
-            </dd>
-
-            <dt>
-                LOẠI SỰ KIỆN
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Category.CategoryName)
-            </dd>
-
+            <dt>LOẠI SỰ KIỆN</dt>
+            <dd>@Html.DisplayFor(model => model.Category.CategoryName)</dd>
         </dl>
 
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
 
-    <div class="form-actions no-color">
-        <input type="submit" value="Xóa" class="btn btn-danger" /> |
-             @Html.ActionLink("TRỞ LẠI", "Index")
-    </div>
+            <div class="form-actions no-color">
+                <input type="submit" value="Xóa" class="btn btn-danger" /> |
+                @Html.ActionLink("TRỞ LẠI", "Index")
+            </div>
         }
     </div>
 </div>

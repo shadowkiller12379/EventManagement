@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EventManagement.Models.Event>
+@model IEnumerable<EventManagement.Models.Event>
 
 @{
     ViewBag.Title = "Index";
@@ -9,6 +9,10 @@
     <h2 style="text-align: center">
         THÔNG TIN SỰ KIỆN
     </h2>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success fw-bold">@TempData["Success"]</div>
+    }
     <p>
         @Html.ActionLink("TẠO MỚI", "Create", null, new
         {
