@@ -1,0 +1,232 @@
+﻿USE [master]
+GO
+/****** Object:  Database [EventManagementDB]    Script Date: 11/19/2026 23:42:35 ******/
+CREATE DATABASE [EventManagementDB]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'EventManagementDB', FILENAME = N'C:\Users\ADMIN\EventManagementDB.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'EventManagementDB_log', FILENAME = N'C:\Users\ADMIN\EventManagementDB_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [EventManagementDB] SET COMPATIBILITY_LEVEL = 170
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [EventManagementDB].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [EventManagementDB] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [EventManagementDB] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [EventManagementDB] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [EventManagementDB] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [EventManagementDB] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [EventManagementDB] SET  MULTI_USER 
+GO
+ALTER DATABASE [EventManagementDB] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [EventManagementDB] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [EventManagementDB] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [EventManagementDB] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [EventManagementDB] SET OPTIMIZED_LOCKING = OFF 
+GO
+ALTER DATABASE [EventManagementDB] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [EventManagementDB] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [EventManagementDB] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [EventManagementDB]
+GO
+/****** Object:  Table [dbo].[Accounts]    Script Date: 11/19/2026 23:42:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Accounts](
+	[AccountID] [int] IDENTITY(1,1) NOT NULL,
+	[Username] [nvarchar](50) NOT NULL,
+	[Password] [nvarchar](100) NOT NULL,
+	[FullName] [nvarchar](100) NOT NULL,
+	[Email] [nvarchar](100) NULL,
+	[Role] [nvarchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[AccountID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Bookings]    Script Date: 11/19/2026 23:42:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Bookings](
+	[BookingID] [int] IDENTITY(1,1) NOT NULL,
+	[AccountID] [int] NOT NULL,
+	[EventID] [int] NOT NULL,
+	[Quantity] [int] NOT NULL,
+	[TotalPrice] [decimal](18, 2) NULL,
+	[BookingDate] [datetime] NULL,
+	[Status] [nvarchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[BookingID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Categories]    Script Date: 11/19/2026 23:42:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Categories](
+	[CategoryID] [int] IDENTITY(1,1) NOT NULL,
+	[CategoryName] [nvarchar](100) NOT NULL,
+	[Description] [nvarchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[CategoryID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Events]    Script Date: 11/19/2026 23:42:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Events](
+	[EventID] [int] IDENTITY(1,1) NOT NULL,
+	[Title] [nvarchar](200) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[Image] [nvarchar](255) NULL,
+	[Location] [nvarchar](200) NULL,
+	[StartDate] [datetime] NULL,
+	[EndDate] [datetime] NULL,
+	[TicketPrice] [decimal](18, 2) NULL,
+	[TotalTickets] [int] NULL,
+	[CategoryID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[EventID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[Accounts] ON 
+
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (1, N'admin', N'e10adc3949ba59abbe56e057f20f883e', N'Quản Trị Viên', N'admin@huflit.edu.vn', N'Admin')
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (2, N'user1', N'123456', N'Nguyễn Văn A', N'anva@gmail.com', N'User')
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (3, N'admin', N'e10adc3949ba59abbe56e057f20f883e', N'Quản Trị Viên', N'admin@huflit.edu.vn', N'Admin')
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (4, N'user1', N'123456', N'Nguyễn Văn A', N'anva@gmail.com', N'User')
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (5, N'123', N'321', N'Dat', N'thanhdatluongngoc@gmail.com', N'User')
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (6, N'1233', N'6b620aedfa4cf153467265629501dd61', N'Dat', N'thanhdatluongngoc123@gmail.com', N'User')
+INSERT [dbo].[Accounts] ([AccountID], [Username], [Password], [FullName], [Email], [Role]) VALUES (7, N'user_demo', N'e10adc3949ba59abbe56e057f20f883e', N'Luong Ngoc Thanh Dat', N'dat123@gmail.com', N'User')
+SET IDENTITY_INSERT [dbo].[Accounts] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Bookings] ON 
+
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (2, 1, 3, 1, CAST(0.00 AS Decimal(18, 2)), CAST(N'2026-10-29T11:58:12.600' AS DateTime), N'Approved')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (3, 1, 4, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-10-29T12:02:24.393' AS DateTime), N'Approved')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (5, 5, 2, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-10-29T13:49:02.327' AS DateTime), N'Cancelled')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (6, 5, 3, 2, CAST(0.00 AS Decimal(18, 2)), CAST(N'2026-11-04T20:34:16.407' AS DateTime), N'Approved')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (7, 1, 2, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-11-12T02:03:26.637' AS DateTime), N'Pending')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (8, 6, 2, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-11-19T03:17:51.367' AS DateTime), N'Pending')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (9, 6, 4, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-11-19T03:18:02.237' AS DateTime), N'Pending')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (1008, 7, 2, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-11-19T22:48:22.877' AS DateTime), N'Cancelled')
+INSERT [dbo].[Bookings] ([BookingID], [AccountID], [EventID], [Quantity], [TotalPrice], [BookingDate], [Status]) VALUES (1009, 7, 2, 1, CAST(150000.00 AS Decimal(18, 2)), CAST(N'2026-11-19T22:49:18.017' AS DateTime), N'Approved')
+SET IDENTITY_INSERT [dbo].[Bookings] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Categories] ON 
+
+INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [Description]) VALUES (1, N'Hội thảo & Công nghệ', N'Các sự kiện về lập trình, AI, công nghệ')
+INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [Description]) VALUES (2, N'Âm nhạc & Live Concert', N'Đại nhạc hội, liveshow ca nhạc')
+INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [Description]) VALUES (3, N'Thể thao & Giải đấu', N'Giải đấu eSports, chạy bộ, bóng đá')
+INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [Description]) VALUES (4, N'Hội thảo & Công nghệ', N'Các sự kiện về lập trình, AI, công nghệ')
+INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [Description]) VALUES (5, N'Âm nhạc & Live Concert', N'Đại nhạc hội, liveshow ca nhạc')
+INSERT [dbo].[Categories] ([CategoryID], [CategoryName], [Description]) VALUES (6, N'Thể thao & Giải đấu', N'Giải đấu eSports, chạy bộ, bóng đá')
+SET IDENTITY_INSERT [dbo].[Categories] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Events] ON 
+
+INSERT [dbo].[Events] ([EventID], [Title], [Description], [Image], [Location], [StartDate], [EndDate], [TicketPrice], [TotalTickets], [CategoryID]) VALUES (1, N'HUFLIT TechDay 2026', N'Hội thảo công nghệ và triển lãm đồ án sinh viên', N'it-services-interface-with-hand-selection-free-photo.jpg', N'Cơ sở Hóc Môn', CAST(N'2026-11-15T08:00:00.000' AS DateTime), CAST(N'2026-11-15T17:00:00.000' AS DateTime), CAST(0.00 AS Decimal(18, 2)), 500, 1)
+INSERT [dbo].[Events] ([EventID], [Title], [Description], [Image], [Location], [StartDate], [EndDate], [TicketPrice], [TotalTickets], [CategoryID]) VALUES (2, N'Đại Nhạc Hội Sinh Viên 2026', N'Đêm nhạc hội tụ các ca sĩ nổi tiếng', N'rqyn6hzsp8w41.jpg', N'Sân vận động Quân khu 7', CAST(N'2026-12-01T18:00:00.000' AS DateTime), CAST(N'2026-12-01T22:00:00.000' AS DateTime), CAST(150000.00 AS Decimal(18, 2)), 996, 2)
+INSERT [dbo].[Events] ([EventID], [Title], [Description], [Image], [Location], [StartDate], [EndDate], [TicketPrice], [TotalTickets], [CategoryID]) VALUES (3, N'HUFLIT TechDay 2026', N'Hội thảo công nghệ và triển lãm đồ án sinh viên', N'it-services-interface-with-hand-selection-free-photo.jpg', N'Cơ sở Hóc Môn', CAST(N'2026-11-15T08:00:00.000' AS DateTime), CAST(N'2026-11-15T17:00:00.000' AS DateTime), CAST(0.00 AS Decimal(18, 2)), 497, 1)
+INSERT [dbo].[Events] ([EventID], [Title], [Description], [Image], [Location], [StartDate], [EndDate], [TicketPrice], [TotalTickets], [CategoryID]) VALUES (4, N'Đại Nhạc Hội Sinh Viên 2026', N'Đêm nhạc hội tụ các ca sĩ nổi tiếng', N'rqyn6hzsp8w41.jpg', N'Sân vận động Quân khu 7', CAST(N'2026-12-01T18:00:00.000' AS DateTime), CAST(N'2026-12-01T22:00:00.000' AS DateTime), CAST(150000.00 AS Decimal(18, 2)), 998, 2)
+INSERT [dbo].[Events] ([EventID], [Title], [Description], [Image], [Location], [StartDate], [EndDate], [TicketPrice], [TotalTickets], [CategoryID]) VALUES (7, N'Giáng sinh ấm áp', N'Tặng quà và khiêu vũ', N'Untitled-4-1200X676-.jpeg', N'Huflit Sư Vạn Hạnh', CAST(N'2026-12-24T10:00:00.000' AS DateTime), CAST(N'2026-12-25T00:00:00.000' AS DateTime), CAST(10000.00 AS Decimal(18, 2)), 500, 2)
+SET IDENTITY_INSERT [dbo].[Events] OFF
+GO
+ALTER TABLE [dbo].[Accounts] ADD  DEFAULT ('User') FOR [Role]
+GO
+ALTER TABLE [dbo].[Bookings] ADD  DEFAULT (getdate()) FOR [BookingDate]
+GO
+ALTER TABLE [dbo].[Bookings] ADD  DEFAULT (N'Confirmed') FOR [Status]
+GO
+ALTER TABLE [dbo].[Events] ADD  DEFAULT ((0)) FOR [TicketPrice]
+GO
+ALTER TABLE [dbo].[Events] ADD  DEFAULT ((0)) FOR [TotalTickets]
+GO
+ALTER TABLE [dbo].[Bookings]  WITH CHECK ADD  CONSTRAINT [FK_Bookings_Accounts] FOREIGN KEY([AccountID])
+REFERENCES [dbo].[Accounts] ([AccountID])
+GO
+ALTER TABLE [dbo].[Bookings] CHECK CONSTRAINT [FK_Bookings_Accounts]
+GO
+ALTER TABLE [dbo].[Bookings]  WITH CHECK ADD  CONSTRAINT [FK_Bookings_Events] FOREIGN KEY([EventID])
+REFERENCES [dbo].[Events] ([EventID])
+GO
+ALTER TABLE [dbo].[Bookings] CHECK CONSTRAINT [FK_Bookings_Events]
+GO
+ALTER TABLE [dbo].[Events]  WITH CHECK ADD  CONSTRAINT [FK_Events_Categories] FOREIGN KEY([CategoryID])
+REFERENCES [dbo].[Categories] ([CategoryID])
+GO
+ALTER TABLE [dbo].[Events] CHECK CONSTRAINT [FK_Events_Categories]
+GO
+USE [master]
+GO
+ALTER DATABASE [EventManagementDB] SET  READ_WRITE 
+GO
